@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+
+SOPS_FLAGS="--input-type yaml --output-type yaml"
+
+export SOPS_AGE_KEY_FILE=${SOPS_AGE_KEY_FILE:-${SCRIPT_DIR}/age.agekey}
+[ -f $SOPS_AGE_KEY_FILE ] || unset SOPS_AGE_KEY_FILE
+
+SEC=$(cat $1)
+sops --decrypt ${SOPS_FLAGS:-} <(echo "$SEC") 2>/dev/null || echo "$SEC"
